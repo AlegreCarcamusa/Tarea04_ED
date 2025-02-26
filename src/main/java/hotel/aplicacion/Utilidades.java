@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package hotel.utilidades;
+package hotel.aplicacion;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,11 +10,19 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 /**
- *
+ * Clase de utilidad que proporciona métodos para validar DNI y 
+ * validar rangos de fechas en el sistema de reservas del hotel.
+ * 
  * @author Ricardo de Toro Fresno
  */
 public class Utilidades {
   
+	/**
+     * Valida si un DNI es correcto en cuanto a su formato y letra correspondiente.
+     * 
+     * @param dni DNI a validar (8 números seguidos de 1 letra mayúscula).
+     * @throws Exception Si el DNI no tiene el formato correcto o la letra no coincide.
+     */
     public static void validarDNI(String dni) throws Exception {
         if (dni == null || dni.length() != 9) {
             throw new Exception("El DNI debe tener 9 caracteres (8 números y 1 letra)");
@@ -33,6 +41,12 @@ public class Utilidades {
         }
     }
 
+    /**
+     * Solicita una fecha al usuario y la devuelve en formato LocalDate.
+     * 
+     * @param mensaje Mensaje mostrado al usuario para solicitar la fecha.
+     * @return LocalDate con la fecha introducida por el usuario.
+     */
     public static LocalDate leerFecha(String mensaje) {
         Scanner sc = new Scanner(System.in);
         LocalDate fecha = null;
@@ -41,7 +55,7 @@ public class Utilidades {
             try {
                 System.out.print(mensaje + " (formato yyyy-MM-dd): ");
                 String input = sc.nextLine();
-                fecha = convertirFecha(input);
+                fecha = LocalDate.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
                 fechaValida = true;
             } catch (DateTimeParseException e) {
                 System.out.println("Fecha inválida. Por favor, introduzca la fecha en formato yyyy-MM-dd.");
@@ -50,10 +64,15 @@ public class Utilidades {
         return fecha;
     }
     
-    public static LocalDate convertirFecha(String fechaTexto) throws DateTimeParseException{
-        return LocalDate.parse(fechaTexto, DateTimeFormatter.ISO_LOCAL_DATE);     
-    }
-    
+    /**
+     * Valida que una fecha de entrada no sea anterior a la actual y que la fecha 
+     * de salida sea posterior a la de entrada.
+     * 
+     * @param fechaInicio Fecha de entrada.
+     * @param fechaFin Fecha de salida.
+     * @throws Exception Si la fecha de entrada es anterior a la actual o la 
+     * fecha de salida no es posterior a la de entrada.
+     */
     public static void validarFechas(LocalDate fechaInicio, LocalDate fechaFin) throws Exception {
         LocalDate hoy = LocalDate.now();
         if (fechaInicio.isBefore(hoy)) {

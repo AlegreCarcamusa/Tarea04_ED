@@ -3,19 +3,31 @@
  */
 package hotel.aplicacion;
 
-import hotel.modelo.Cliente;
-import hotel.modelo.Reserva;
-import hotel.modelo.TipoHabitacion;
-import hotel.utilidades.Utilidades;
 import java.time.LocalDate;
 import java.util.Scanner;
 
 /**
- *
+ * Clase principal que gestiona la interacción con el usuario para la gestión de reservas en un hotel.
+ * 
+ * Permite realizar las siguientes operaciones:
+ * Crear clientes
+ * Crear reservas
+ * Mostrar datos de las reservas
+ * Salir del programa
+ * 
+ * Las reservas y clientes se almacenan en variables individuales sin el uso de colecciones.
+ * 
  * @author Ricardo de Toro Fresno
  */
 public class Hotel {
 
+	 /**
+     * Método principal que ejecuta el menú de gestión de reservas del hotel.
+     * 
+     * Utiliza un bucle para presentar opciones al usuario hasta que este decida salir.
+     * 
+     * @param args Argumentos de la línea de comandos que no son utilizados.
+     */
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		// Variables para almacenar los clientes y reservas (sin uso de arrays o
@@ -43,30 +55,7 @@ public class Hotel {
 			case 1:
 				// Opción para crear clientes
 				try {
-					String nombre;
-					do {
-						System.out.println("\nIntroduzca los datos del cliente:");
-						System.out.print("Nombre: ");
-						nombre = sc.nextLine();
-					} while(nombre.isEmpty());
-					
-					String dni=null;
-					boolean dniValido;
-					do {
-						try {
-							System.out.print("Introduzca DNI: ");
-							dni = sc.nextLine();
-							Utilidades.validarDNI(dni);
-							dniValido=true;
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-							dniValido=false;
-						}
-					} while (!dniValido);
-					System.out.print("Teléfono: ");
-					String telefono = sc.nextLine();
-					// Se crea el primer cliente con datos ingresados por el usuario.
-					cliente1 = new Cliente(nombre, dni, telefono);
+					cliente1 = altaCliente(sc);
 					System.out.println("Cliente creado correctamente:\n" + cliente1.mostrarInformacion());
 					
 					// Creación de dos clientes adicionales con datos literales.
@@ -209,6 +198,45 @@ public class Hotel {
 		} while (opcion != 4);
 
 		sc.close();
+	}
+	
+	/**
+	 * Solicita al usuario los datos de un nuevo cliente y lo crea si la información es válida.
+	 * 
+	 * Se solicita el nombre, el DNI (validado mediante {@code Utilidades.validarDNI}) y el teléfono.
+	 * El nombre no puede estar vacío.</li>
+	 * El DNI debe ser válido según las reglas definidas en {@code Utilidades.validarDNI}.
+	 * 
+	 * @param sc Objeto {@code Scanner} utilizado para la entrada de datos.
+	 * @return Un objeto {@code Cliente} con los datos introducidos.
+	 * @throws Exception Si hay un error en la validación del DNI.
+	 */
+	public static Cliente altaCliente(Scanner sc) throws Exception {
+	    String nombre;
+	    do {
+	        System.out.println("\nIntroduzca los datos del cliente:");
+	        System.out.print("Nombre: ");
+	        nombre = sc.nextLine();
+	    } while (nombre.isEmpty());
+
+	    String dni = null;
+	    boolean dniValido;
+	    do {
+	        try {
+	            System.out.print("Introduzca DNI: ");
+	            dni = sc.nextLine();
+	            Utilidades.validarDNI(dni);
+	            dniValido = true;
+	        } catch (Exception e) {
+	            System.out.println(e.getMessage());
+	            dniValido = false;
+	        }
+	    } while (!dniValido);
+
+	    System.out.print("Teléfono: ");
+	    String telefono = sc.nextLine();
+
+	    return new Cliente(nombre, dni, telefono);
 	}
 
 }
